@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 usn_prefix = "4so15ee"
-last_usn = 50
+last_usn = 200
 no_of_subjects = 8
 SGPA_list = []
 name_list = []
@@ -13,14 +13,15 @@ for num in range(1,last_usn + 1):
     else :
     	usn = usn_prefix + str(num)
     	
-    link = "http://result.vtu.ac.in/cbcs_results2016.aspx?usn=" + usn
+    link = "http://result.vtu.ac.in/cbcs_results2016.aspx?usn=" + usn + "&sem=2"
     r = requests.get(link)
     data = r.text
     soup = BeautifulSoup(data, "lxml")
-    student_name = (soup.find(id="txtName")).get('value')
-    sgpa = soup.find(id="lblSGPA").b.string
+    if soup.find(id="txtName"):
+        student_name = (soup.find(id="txtName")).get('value')
+        sgpa = soup.find(id="lblSGPA").b.string
 
-    if student_name and sgpa:
+    #if student_name and sgpa:
         name_list.append(student_name)
         SGPA_list.append(sgpa)
         print(usn.upper()+" - "+student_name)
